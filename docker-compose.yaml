@@ -1,0 +1,57 @@
+# version: "3.8"
+
+services:
+  api:
+    container_name: ts-express-sequelize-api
+    env_file:
+      - .env
+    expose:
+      - "${PORT}"
+    ports:
+      # system port : container port
+      - "${PORT}:${PORT}"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ./src:/home/node/app/src
+      - ./nodemon.json:/home/node/app/nodemon.json
+    command: npm run dev
+
+  db:
+    container_name: postgres-postgis-cnt
+    image: postgis/postgis
+    restart: always
+    # environment:
+    #   POSTGRES_DB: postgis-db
+    #   POSTGRES_USER: postgis
+    #   POSTGRES_PASSWORD: postgispassword
+    #   PGDATA: /var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin4-cnt
+    image: dpage/pgadmin4
+    restart: always
+    # environment:
+    #   PGADMIN_DEFAULT_EMAIL: admin@admin.com # add your email here
+    #   PGADMIN_DEFAULT_PASSWORD: pgadminpassword
+    #   PGADMIN_LISTEN_PORT: 80
+    env_file:
+      - .env
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  db-data:
+  pgadmin-data:

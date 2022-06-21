@@ -1,1 +1,1 @@
-boilerplate node express typescript sequelize project
+Boilerplate node express typescript sequelize docker pgadmin project
